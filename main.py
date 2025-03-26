@@ -15,7 +15,7 @@ def start(msg):
 	print(f"someone used bot: {msg.from_user.username}")
 
 	bot.send_message(msg.chat.id,
-	"Привет, я интеллектуальный бот ОАОААО организации Quasar! Задавай вопросы")
+	"Привет, я интеллектуальный бот организации Quasar! Задавай вопросы")
 
 @bot.message_handler(commands = ["flag", "help"])
 def flag(msg):
