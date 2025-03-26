@@ -1,6 +1,6 @@
 from telebot import TeleBot, types
 
-# Ссылка на наш сайт (такого нет) и не будет 
+# Ссылка на наш сайт (такого нет) и не будет
 website_link = "https://www.youtube.com/watch?v=XfELJU1mRMg"
 
 # Инициализация бота и чтение токена из файла
