@@ -44,7 +44,6 @@ def site(msg):
 	bot.send_message(msg.chat.id
 		, f"Наш шедевротрейлер <a href='{website_link}'>quasar.ru</a>"
 		, parse_mode="html")
-	#webbrowser.open(website_link)
 
 @bot.message_handler(content_types=["photo"])
 def photo(msg):
@@ -60,13 +59,13 @@ def photo(msg):
 	markup.row(btn_review, btn_operator)
 	print(f"someone sended picture: {msg.from_user.username}")
 	bot.reply_to(msg
-		, "Ебать ты урод"
+		, "Нуууууу, не скажу, что плохо. Отправь ещё что-нибудь 👀👀👀."
 		, reply_markup=markup)
 
 @bot.message_handler(content_types=["sticker"])
 def photo(msg):
 	print(f"someone sended a sticker: {msg.from_user.username}")
-	bot.reply_to(msg, "Ну и хуйня")
+	bot.reply_to(msg, "👀")
 
 # Этот хендлер должен быть всегда в конце,
 # иначе он будет захватывать все последующие
@@ -79,12 +78,11 @@ def info(msg):
 		username = username + " " + msg.from_user.last_name
 
 	match msg.text.lower():
-		case "иди нахуй":
+		case "ты крутой":
 			bot.reply_to(msg
-				, f"{username}, сам иди"
+				, f"{username}, ты тоже"
 				, reply_to_message_id=msg.id
 			)
-
 		case "myid":
 			bot.send_message(msg.chat.id
 				, f"Your id is {msg.from_user.id}"
