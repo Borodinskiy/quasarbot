@@ -2,7 +2,7 @@ import openai
 from config import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
-
+#неважно как не важно где
 def get_ai_response(user_message):
     try:
         response = openai.ChatCompletion.create(
