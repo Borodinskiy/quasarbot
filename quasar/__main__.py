@@ -101,8 +101,8 @@ def chat(message):
 		case "Назад":
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 		case default:
-			bot.reply_to(message
-				, "Сейчас отвечу на ваш вопрос")
+			bot.reply_to(message, "Сейчас отвечу на ваш вопрос")
+# 		Предать вопрос нейросети
 
 # Финальные шаги
 
