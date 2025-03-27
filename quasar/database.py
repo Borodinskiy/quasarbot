@@ -13,10 +13,10 @@ class DataBase():
 		cursor = database.cursor()
 
 		# Создание базы данных, если её до этого не было
-		cur.execute("CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, name varchar(50), stage varchar(50))")
+		cursor.execute("CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, name varchar(50), stage varchar(50))")
 		database.commit()
 
-		cur.close()
+		cursor.close()
 		database.close()
 
 	def store_message(message):
