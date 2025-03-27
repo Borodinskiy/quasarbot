@@ -85,7 +85,7 @@ def chat(message):
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 		case default:
 			bot.reply_to(message
-				, "Приношу наиумоляюще грубочайшие извинения, но что вы имеете в виду??????")
+				, "Приношу извинения, но я не понимаю. Перефразируйте?")
 
 # Финальные шаги
 
