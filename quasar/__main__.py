@@ -41,10 +41,8 @@ def vopros(message):
 	markup.row(battom1)
 	battom2 = types.KeyboardButton("Задать вопрос про Госуслуги")
 	markup.row(battom2)
-	battom3 = types.KeyboardButton("Задать вопрос про Медицинские полисы")
+	battom3 = types.KeyboardButton("Задать иной вопрос")
 	markup.row(battom3)
-	battom4 = types.KeyboardButton("Задать иной вопрос")
-	markup.row(battom4)
 	bot.send_message(message.chat.id, "Выберите опцию снизу", reply_markup=markup)
 
 
@@ -65,13 +63,32 @@ def chat(message):
 			battom3 = types.KeyboardButton("СберБанк")
 			battom2 = types.KeyboardButton("Банк АБ Россия")
 			markup.row(battom2, battom3)
+			battom4 = types.KeyboardButton("Другой банк")
+			markup.row(battom4)
 			battom_esc = types.KeyboardButton("Назад")
 			markup.row(battom_esc)
-			bot.reply_to(message, f"Задайте вопрос", reply_to_message_id=message.id, reply_markup=markup)
+			bot.reply_to(message, f"Выберите банк", reply_to_message_id=message.id, reply_markup=markup)
+
+		case "Банк РНКБ":
+			# 	передать нейронке
+			bot.send_message(message.chat.id, "Напишите вопрос")
+		# 	передать нейронке текс и активировать функцию
+		case "СберБанк":
+			# 	передать нейронке
+			bot.send_message(message.chat.id, "Напишите вопрос")
+		# 	передать нейронке текс и активировать функцию
+		case "Банк АБ Россия":
+			# 	передать нейронке инфу
+			bot.send_message(message.chat.id, "Напишите вопрос")
+		# 	передать нейронке текс и активировать функцию
+		case "Другой банк":
+			# 	передать нейронке
+			bot.send_message(message.chat.id, "Напишите свой банк, а потом вопрос")
 		case "Задать вопрос про Госуслуги":
 			bot.send_message(message.chat.id
 				, f"Хорошо, {username}, что вас интересует?"
 			)
+		# 	передать вопрос нейронке
 		case "Задать вопрос про Медицинские полисы":
 			bot.send_message(message.chat.id
 				, f"Хорошо, {username}, что вас интересует?"
@@ -85,7 +102,7 @@ def chat(message):
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 		case default:
 			bot.reply_to(message
-				, "Приношу извинения, но я не понимаю. Перефразируйте?")
+				, "Сейчас отвечу на ваш вопрос")
 
 # Финальные шаги
 
