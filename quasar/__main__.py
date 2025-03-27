@@ -1,5 +1,6 @@
 from telebot import TeleBot, types
 import re
+from ai_module import get_ai_response
 
 # Ссылка на наш сайт (такого нет) и не будет
 website_link = "https://www.youtube.com/watch?v=XfELJU1mRMg"
@@ -28,9 +29,6 @@ except FileNotFoundError:
 
 
 def delete_message_with_personal_data(message):
-    """
-    Проверяет сообщение на наличие персональных данных и удаляет его, если данные найдены.
-    """
     patterns = {
         "emails": r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+',
         "phones": r'(\+?\d{1,3}[-.\s]?)?(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}',
@@ -45,18 +43,24 @@ def delete_message_with_personal_data(message):
         if matches:
             found_data.append(f"{category.capitalize()}: {matches}")
 
-    if found_data:
-        warning_message = ( "⚠️ Похоже, вы ввели персональные данные. Вы уверены, что хотите отправить этот вопрос? "
-"Они могут попасть не в те руки. Вы уверенны, что хотите отправить это сообщение?")
-        bot.send_message(message.chat.id, warning_message)
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Да, отправить вопрос", callback_data="confirm_send"))
+    markup.add(types.InlineKeyboardButton("Нет, задать вопрос заново", callback_data="restart_question"))
 
-        # Удаляем сообщение с персональными данными
+    if found_data:
+        warning_message = (
+            "⚠️ Похоже, вы ввели персональные данные. Вы уверены, что хотите отправить этот вопрос? "
+            "Они могут попасть не в те руки.\nВыберите вариант ответа ниже"
+        )
+        bot.send_message(message.chat.id, warning_message, reply_markup=markup)
+
+        # Удаляем исходное сообщение с персональными данными
         bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
         # Логируем найденные данные (для администратора или отладки)
-        print("Найдены следующие персональные данные:")
-        for data in found_data:
-            print(data)
+        # print("Найдены следующие персональные данные:")
+        # for data in found_data:
+        #     print(data)
 
 
 # Основные декораторы
@@ -77,6 +81,8 @@ def vopros(message):
     markup.row(battom3)
 
     bot.send_message(message.chat.id, "Выберите опцию снизу", reply_markup=markup)
+
+
 
 
 # Этот хендлер должен быть всегда в конце,
@@ -108,6 +114,9 @@ def chat(message):
 
         case "Банк РНКБ":
             bot.send_message(message.chat.id, f"Напишите свой вопрос {warning_string}")
+            user_message = message.text
+            bot.send_message(message.chat.id, get_ai_response(user_message))
+
 
         case "СберБанк":
             bot.send_message(message.chat.id, f"Напишите вопрос {warning_string}")
