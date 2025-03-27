@@ -34,7 +34,8 @@ def cmd_start(message):
 	print(f"someone used bot: {message.from_user.username}")
 
 	bot.send_message(message.chat.id,
-	"Привет, я интеллектуальный бот! Задавай вопросы")
+	"Привет, я интеллектуальный бот! Задавайте вопросы")
+def vopros(message):
 	markup = types.ReplyKeyboardMarkup()
 	battom1 = types.KeyboardButton("Задать вопрос про банк")
 	markup.row(battom1)
@@ -44,55 +45,8 @@ def cmd_start(message):
 	markup.row(battom3)
 	battom4 = types.KeyboardButton("Задать иной вопрос")
 	markup.row(battom4)
-	bot.send_message(message.chat.id, "Чем могу вам помочь сегодня?", reply_markup=markup)
-# @bot.message_handler(commands = ["flag", "help"])
-# def cmd_flag(message):
-# 	print(f"someone used bot: {message.from_user.username}")
-#
-# 	bot.send_message(message.chat.id
-# 		, "<b>Hello</b> <em>you</em> are too late for you(<b>self</b>)"
-# 		, parse_mode="html")
+	bot.send_message(message.chat.id, "Выберите опцию снизу", reply_markup=markup)
 
-@bot.message_handler(commands = ["hello"])
-def cmd_hello(message):
-	print(f"someone used bot: {message.from_user.username}")
-
-	username = message.from_user.first_name
-	if message.from_user.last_name:
-		username = username + " " + message.from_user.last_name
-
-	bot.send_message(message.chat.id
-		, f"Привет, {username}", reply_to_message_id=message.id)
-
-@bot.message_handler(commands = ["site", "website"])
-def cmd_site(message):
-	print(f"someone used bot: {message.from_user.username}")
-
-	bot.send_message(message.chat.id
-		, f"Наш шедевротрейлер <a href='{website_link}'>quasar.ru</a>"
-		, parse_mode="html")
-
-@bot.message_handler(content_types=["photo"])
-def received_photo(message):
-	markup = types.InlineKeyboardMarkup()
-
-	btn_review = types.InlineKeyboardButton(
-		"Оставить отзыв об ответе"
-		, callback_data="delete")
-	btn_operator = types.InlineKeyboardButton(
-		"Пожаловаться на сообщение"
-		, url=website_link)
-
-	markup.row(btn_review, btn_operator)
-	print(f"someone sended picture: {message.from_user.username}")
-	bot.reply_to(message
-		, "Нуууууу, не скажу, что плохо. Отправь ещё что-нибудь 👀👀👀."
-		, reply_markup=markup)
-
-@bot.message_handler(content_types=["sticker"])
-def received_sticker(message):
-	print(f"someone sended a sticker: {message.from_user.username}")
-	bot.reply_to(message, "👀")
 
 # Этот хендлер должен быть всегда в конце,
 # иначе он будет захватывать все последующие
@@ -103,13 +57,17 @@ def chat(message):
 	username = message.from_user.first_name
 	if message.from_user.last_name:
 		username = username + " " + message.from_user.last_name
-
+	markup = types.ReplyKeyboardMarkup()
 	match message.text:
 		case "Задать вопрос про банк":
-			bot.reply_to(message
-				, f"Хорошо, {username}, что вас интересует?"
-				, reply_to_message_id=message.id
-			)
+			battom1 = types.KeyboardButton("Банк РНКБ")
+			markup.row(battom1)
+			battom3 = types.KeyboardButton("СберБанк")
+			battom2 = types.KeyboardButton("Банк АБ Россия")
+			markup.row(battom2, battom3)
+			battom_esc = types.KeyboardButton("Назад")
+			markup.row(battom_esc)
+			bot.reply_to(message, f"Задайте вопрос", reply_to_message_id=message.id, reply_markup=markup)
 		case "Задать вопрос про Госуслуги":
 			bot.send_message(message.chat.id
 				, f"Хорошо, {username}, что вас интересует?"
@@ -123,6 +81,8 @@ def chat(message):
 			bot.send_message(message.chat.id
 							 , f"Хорошо, {username}, что вас интересует?"
 							 )
+		case "Назад":
+			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 		case default:
 			bot.reply_to(message
 				, "Приношу наиумоляюще грубочайшие извинения, но что вы имеете в виду??????")
