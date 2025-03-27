@@ -34,15 +34,24 @@ def cmd_start(message):
 	print(f"someone used bot: {message.from_user.username}")
 
 	bot.send_message(message.chat.id,
-	"Привет, я интеллектуальный бот организации Quasar! Задавай вопросы")
-
-@bot.message_handler(commands = ["flag", "help"])
-def cmd_flag(message):
-	print(f"someone used bot: {message.from_user.username}")
-
-	bot.send_message(message.chat.id
-		, "<b>Hello</b> <em>you</em> are too late for you(<b>self</b>)"
-		, parse_mode="html")
+	"Привет, я интеллектуальный бот! Задавай вопросы")
+	markup = types.ReplyKeyboardMarkup()
+	battom1 = types.KeyboardButton("Задать вопрос про банк")
+	markup.row(battom1)
+	battom2 = types.KeyboardButton("Задать вопрос про Госуслуги")
+	markup.row(battom2)
+	battom3 = types.KeyboardButton("Задать вопрос про Медицинские полисы")
+	markup.row(battom3)
+	battom4 = types.KeyboardButton("Задать иной вопрос")
+	markup.row(battom4)
+	bot.send_message(message.chat.id, "Чем могу вам помочь сегодня?", reply_markup=markup)
+# @bot.message_handler(commands = ["flag", "help"])
+# def cmd_flag(message):
+# 	print(f"someone used bot: {message.from_user.username}")
+#
+# 	bot.send_message(message.chat.id
+# 		, "<b>Hello</b> <em>you</em> are too late for you(<b>self</b>)"
+# 		, parse_mode="html")
 
 @bot.message_handler(commands = ["hello"])
 def cmd_hello(message):
@@ -95,20 +104,25 @@ def chat(message):
 	if message.from_user.last_name:
 		username = username + " " + message.from_user.last_name
 
-	match message.text.lower():
-		case "ты крутой":
+	match message.text:
+		case "Задать вопрос про банк":
 			bot.reply_to(message
-				, f"{username}, ты тоже"
+				, f"Хорошо, {username}, что вас интересует?"
 				, reply_to_message_id=message.id
 			)
-		case "myid":
+		case "Задать вопрос про Госуслуги":
 			bot.send_message(message.chat.id
-				, f"Your id is {message.from_user.id}"
+				, f"Хорошо, {username}, что вас интересует?"
 			)
-		case "whoami":
+		case "Задать вопрос про Медицинские полисы":
 			bot.send_message(message.chat.id
-				, f"Your is {message.from_user.username}"
+				, f"Хорошо, {username}, что вас интересует?"
 			)
+
+		case "Задать иной вопрос":
+			bot.send_message(message.chat.id
+							 , f"Хорошо, {username}, что вас интересует?"
+							 )
 		case default:
 			bot.reply_to(message
 				, "Приношу наиумоляюще грубочайшие извинения, но что вы имеете в виду??????")
