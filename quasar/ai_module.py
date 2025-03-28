@@ -1,5 +1,4 @@
 import lmstudio as lms
-
 # Промты, используемые для различных ситуаций
 
 PROMPT_DEFAULT = """
