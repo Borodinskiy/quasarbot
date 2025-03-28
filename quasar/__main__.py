@@ -131,15 +131,15 @@ def chat(message):
 
 		case "СберБанк":
 			bot.send_message(message.chat.id, f"Напишите вопрос {WARNING_STRING}")
-			bot.register_next_step_handler(message, handle_ai_response)
+			bot.register_next_step_handler(message, handle_ai_response, "sberbank")
 
 		case "Банк АБ Россия":
 			bot.send_message(message.chat.id, f"Напишите вопрос {WARNING_STRING}")
-			bot.register_next_step_handler(message, handle_ai_response)
+			bot.register_next_step_handler(message, handle_ai_response, "ABRussia")
 
 		case "Другой банк":
 			bot.send_message(message.chat.id, f"Напишите свой банк, а потом вопрос {WARNING_STRING}")
-			bot.register_next_step_handler(message, handle_ai_response)
+			bot.register_next_step_handler(message, handle_ai_response, "Russian_bank")
 
 		case "Задать вопрос про Госуслуги":
 			bot.send_message(
