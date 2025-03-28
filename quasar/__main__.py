@@ -30,8 +30,6 @@ except FileNotFoundError:
 	exit()
 
 
-
-
 def delete_message_with_personal_data(message):
 	patterns = {
 		"emails": r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+',
@@ -53,7 +51,7 @@ def delete_message_with_personal_data(message):
 
 	if found_data:
 		warning_message = (
-			"⚠️ Похоже, вы ввели персональные данные. Напишите вопрос заново, но не пишите пароли, номера телефонов, почты, счета и другие персональные данные."
+			"⚠️ Похоже, вы ввели персональные данные. Напишите вопрос заново, но не пишите пароли, номера телефонов, почту, счета и другую конфиденциальную информацию."
 		)
 		bot.send_message(message.chat.id, warning_message)
 
@@ -92,12 +90,18 @@ def delete_message_with_personal_data(message):
 #             bot.send_message(callback.message.chat.id, "Неизвестная команда. Попробуйте снова.")
 
 
-
-# TODO: Стиль - это вид промпта, который надо использовать
+# Стиль - это вид промпта, который надо использовать
 def handle_ai_response(message, style = "default"):
-	# Если в сообщении не найдены ПДн
-	if not delete_message_with_personal_data(message):
-		bot.reply_to(message, get_ai_response(message, style))
+	good_responce = False
+	while not good_responce:
+		try:
+			# Если в сообщении не найдены ПДн
+			if not delete_message_with_personal_data(message):
+				bot.reply_to(message, get_ai_response(message, style))
+			good_responce = True
+		except Exception as error:
+			print(f"Got error: {error}!")
+			good_responce = False
 
 # Основные декораторы
 
@@ -118,8 +122,6 @@ def vopros(message):
 	markup.row(battom3)
 
 	bot.send_message(message.chat.id, "Выберите опцию снизу", reply_markup=markup)
-
-
 
 
 # Этот хендлер должен быть всегда в конце,
@@ -165,7 +167,7 @@ def chat(message):
 			bot.register_next_step_handler(message, handle_ai_response, "ABRussia")
 
 		case "Другой банк":
-			bot.send_message(message.chat.id, f"Напишите свой банк, а потом вопрос {WARNING_STRING}")
+			bot.send_message(message.chat.id, f"Напишите свой банк и потом вопрос {WARNING_STRING}")
 			bot.register_next_step_handler(message, handle_ai_response, "Russian_bank")
 
 		case "Задать вопрос про Госуслуги":
@@ -182,11 +184,11 @@ def chat(message):
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 
 		case _:
-			bot.reply_to(message, "Сейчас отвечу на ваш вопрос")
-			bot.send_message(message.chat.id, get_ai_response(message))
+			bot.reply_to(message, "Сейчас попытаюсь ответить на ваш вопрос")
+			bot.send_message(message.chat.id, get_ai_response(message, "Other"))
 
 
 # Финальные шаги
 if __name__ == "__main__":
-	print("aboba")
+	print("Bot polling process started")
 	bot.polling(none_stop=True)
