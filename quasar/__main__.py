@@ -95,6 +95,7 @@ def delete_message_with_personal_data(message):
 
 # TODO: Стиль - это вид промпта, который надо использовать
 def handle_ai_response(message, style = "default"):
+
 	# Если в сообщении не найдены ПДн
 	if not delete_message_with_personal_data(message):
 		bot.reply_to(message, get_ai_response(message, style))
