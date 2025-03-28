@@ -182,8 +182,8 @@ def chat(message):
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
 
 		case _:
-			bot.reply_to(message, "Сейчас отвечу на ваш вопрос")
-			bot.send_message(message.chat.id, get_ai_response(message))
+			bot.reply_to(message, "Сейчас попытаюсь ответить на ваш вопрос")
+			bot.send_message(message.chat.id, get_ai_response(message, "Other"))
 
 
 # Финальные шаги
