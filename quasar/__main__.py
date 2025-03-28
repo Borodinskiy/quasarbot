@@ -1,4 +1,6 @@
-from telebot import TeleBot, types
+from gc import callbacks
+
+from telebot import TeleBot, types, callback_data
 import re
 from ai_module import get_ai_response
 
@@ -28,6 +30,8 @@ except FileNotFoundError:
 	exit()
 
 
+
+
 def delete_message_with_personal_data(message):
 	patterns = {
 		"emails": r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+',
@@ -43,16 +47,15 @@ def delete_message_with_personal_data(message):
 		if matches:
 			found_data.append(f"{category.capitalize()}: {matches}")
 
-	markup = types.InlineKeyboardMarkup()
-	markup.add(types.InlineKeyboardButton("Да, отправить вопрос", callback_data="confirm_send"))
-	markup.add(types.InlineKeyboardButton("Нет, задать вопрос заново", callback_data="restart_question"))
+	# markup = types.InlineKeyboardMarkup()
+	# markup.add(types.InlineKeyboardButton("Да, отправить вопрос", callback_data="confirm_send"))
+	# markup.add(types.InlineKeyboardButton("Нет, задать вопрос заново", callback_data="restart_question"))
 
 	if found_data:
 		warning_message = (
-			"⚠️ Похоже, вы ввели персональные данные. Вы уверены, что хотите отправить этот вопрос? "
-			"Они могут попасть не в те руки.\nВыберите вариант ответа ниже"
+			"⚠️ Похоже, вы ввели персональные данные. Напишите вопрос заново, но не пишите пароли, номера телефонов, почты, счета и другие персональные данные."
 		)
-		bot.send_message(message.chat.id, warning_message, reply_markup=markup)
+		bot.send_message(message.chat.id, warning_message)
 
 		# Удаляем исходное сообщение с персональными данными
 		bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
@@ -65,6 +68,30 @@ def delete_message_with_personal_data(message):
 		return True
 	# Не найдены ПДн
 	return False
+
+
+# @bot.callback_query_handler(func=lambda callback: True)
+# def callback_message(callback):
+#     # Отправляем подтверждение об обработке колбэка
+#     bot.answer_callback_query(callback.id)
+#
+#     # Проверяем, есть ли данные в callback
+#     if not callback.data:
+#         bot.send_message(callback.message.chat.id, "Произошла ошибка. Попробуйте снова.")
+#         return
+#
+#     match callback.data:
+#         case "confirm_send":
+#             # Обрабатываем подтверждение отправки вопроса
+#             bot.send_message(callback.message.chat.id, get_ai_response(callback.message))
+#         case "restart_question":
+#             # Перезапускаем процесс задания вопроса
+#             vopros(callback.message)
+#         case _:
+#             # Если неизвестный колбэк
+#             bot.send_message(callback.message.chat.id, "Неизвестная команда. Попробуйте снова.")
+
+
 
 # TODO: Стиль - это вид промпта, который надо использовать
 def handle_ai_response(message, style = "default"):
@@ -144,11 +171,12 @@ def chat(message):
 		case "Задать вопрос про Госуслуги":
 			bot.send_message(
 				message.chat.id,
-				f"Хорошо, {username}, что вас интересует? {WARNING_STRING}"
-			)
+				f"Хорошо, {username}, что вас интересует? {WARNING_STRING}")
+			bot.register_next_step_handler(message, handle_ai_response, "Gosuslugi")
 
 		case "Задать иной вопрос":
 			bot.send_message(message.chat.id, f"Хорошо, {username}, что вас интересует? {WARNING_STRING}")
+			bot.register_next_step_handler(message, handle_ai_response, "Other")
 
 		case "Назад":
 			bot.send_message(message.chat.id, "↓↓↓↓", reply_markup=vopros(message))
